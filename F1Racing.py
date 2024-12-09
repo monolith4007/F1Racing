@@ -1,5 +1,8 @@
 # Credits: W3Schools, GeeksforGeeks, Stack Overflow
 
+# --- Libraries ---
+import statistics
+
 # --- Reader functions ---
 def read_results():
     file = open("results.txt", "r")
@@ -12,6 +15,39 @@ def read_drivers():
     contents = file.read()
     file.close()
     return contents
+
+# --- Helper functions ---
+def calculate_points(place):
+    if place == 1:
+        return 25
+    elif place == 2:
+        return 18
+    elif place == 3:
+        return 15
+    elif place == 4:
+        return 12
+    elif place == 5:
+        return 10
+    elif place == 6:
+        return 8
+    elif place == 7:
+        return 6
+    elif place == 8:
+        return 4
+    elif place == 9:
+        return 2
+    elif place == 10:
+        return 1
+    elif place > 10:
+        return 0
+
+def calculate_total_time(laps):
+    # Check if crashed or retired
+    if "retired" in laps or "crashed" in laps:
+        # Default to -1; I'll think of something better later on...
+        return -1
+
+    return statistics.mean(laps)
 
 # --- Results functions ---
 def individual_race_result(results_string, drivers_string, race_number):
@@ -26,6 +62,7 @@ def individual_race_result(results_string, drivers_string, race_number):
 
     # Initialize driver lap times
     lap_times = []
+    total_times = []
     opening = -1
     ending = -1
 
@@ -43,18 +80,21 @@ def individual_race_result(results_string, drivers_string, race_number):
         lap_times.append(results_index[opening:ending]) # Append everything between the "[]"
         lap_times[n] = lap_times[n].split(", ") # Separate lap times individually
         
-        # Convert valid lap times to floats
+        # Loop through lap times
         for x in range(len(lap_times[n])):
             lap_index = lap_times[n][x]
 
+            # Convert valid lap times to floats
             # Check for the presence of a number; the first character should suffice
             if lap_index[0].isdigit():
                 lap_times[n][x] = float(lap_index)
-            else:
-                # Crashed or retired; let's default to -1
-                lap_times[n][x] = -1
-        
-    print(lap_times[3])
+
+        # Calculate total times
+        total_times.append(calculate_total_time(lap_times[n]))
+
+    #print(lap_times)
+    #print(total_times)
+    
     # Assign drivers to a list
     #drivers_list = drivers_string.splitlines()
     
