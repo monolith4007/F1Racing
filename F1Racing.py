@@ -44,8 +44,11 @@ def calculate_points(place):
 def calculate_total_time(laps):
     # Check if crashed or retired
     if "retired" in laps or "crashed" in laps:
-        # Default to -1; I'll think of something better later on...
-        return -1
+        # Copy laps and remove "retired"/"crashed" index
+        # Retiring or crashing ends the race instantly, so we can safely remove the last index
+        successful_laps = laps.copy()
+        successful_laps.pop()
+        return statistics.mean(successful_laps)
 
     return statistics.mean(laps)
 
@@ -92,7 +95,8 @@ def individual_race_result(results_string, drivers_string, race_number):
         # Calculate total times
         total_times.append(calculate_total_time(lap_times[n]))
 
-    #print(lap_times)
+    total_times.sort()
+    print(total_times)
     #print(total_times)
     
     # Assign drivers to a list
